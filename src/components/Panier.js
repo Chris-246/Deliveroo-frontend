@@ -65,7 +65,7 @@ const Panier = ({ panier, setPanier }) => {
           </p>
         </div>
       ) : (
-        <p>Panier vide</p>
+        <p className="vide">Panier vide</p>
       )}
     </div>
   );
