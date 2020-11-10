@@ -1,23 +1,48 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { useState, useEffect } from "react";
+import Header from "./components/Header";
+import axios from "axios";
+import Category from "./components/Category";
+import Panier from "./components/Panier";
 
 function App() {
+  //définition du state pour recevoir les données
+  const [data, setData] = useState({});
+
+  //définition du state pour laisser terminer chargement de la requête
+  const [isLoading, setIsLoading] = useState(true);
+
+  //définition de la state qui recevra les infos des repas ajoutés au panier => c'est le panier
+  const [panier, setPanier] = useState([]);
+
+  //fonction pour récupérer les données grâce à une requête (après avoir mis en place un backend)
+  const fetchData = async () => {
+    const response = await axios.get(
+      "https://deliveroo-lereacteur-backend.herokuapp.com/"
+    );
+
+    setData(response.data);
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Header data={data} isLoading={isLoading} />
+      <main className="main">
+        <div className="order container">
+          <Category
+            data={data}
+            isLoading={isLoading}
+            panier={panier}
+            setPanier={setPanier}
+          />
+          <Panier panier={panier} setPanier={setPanier} />
+        </div>
+      </main>
     </div>
   );
 }
